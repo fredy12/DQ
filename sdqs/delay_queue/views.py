@@ -48,3 +48,25 @@ def put_message(request):
         return HTTPServerError('Put message error')
 
 
+def update_message(request):
+    # TODO(tongkai): to do update message
+    return HttpResponse()
+
+
+def delete_message(request):
+    # TODO(tongkai): to do delete message
+    return HttpResponse()
+
+
+def handle_message(request):
+    if request.method == 'GET':
+        return get_message(request)
+    elif request.method == 'POST':
+        return put_message(request)
+    elif request.method == 'PUT':
+        return update_message(request)
+    elif request.method == 'DELETE':
+        return delete_message(request)
+    else:
+        raise HTTPBadRequest('HTTP method is invalid')
+

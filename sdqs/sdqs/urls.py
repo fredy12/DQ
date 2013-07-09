@@ -11,8 +11,8 @@ from delay_queue.views import *
 #    return HttpResponse('hello world')
 
 urlpatterns = patterns('',
-    ('^put_message/$', put_message),
-    ('^get_message/$', get_message),
+    ('^message$', handle_message),
+    #('^get_message/$', get_message),
     # Examples:
     # url(r'^$', 'sdqs.views.home', name='home'),
     # url(r'^sdqs/', include('sdqs.foo.urls')),
