@@ -4,13 +4,56 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
+				$(".input_msg").click(function(){
+					$(this).text('');
+				}).blur(function(){
+					$(this).text('Leave Your Message Here to Tongkai');
+				});
+
+				$(".submit_msg").click(function(){
+					$.ajax({
+						type: "post",
+						url: "http://42.96.170.156:8000/message",
+						dataType: "json",
+						data: {user: "para", message: "hello world", lable: ""},
+						beforeSend: function(XMLHttpRequest){
+							//ShowLoading();
+						},
+						success: function(data, textStatus){
+							alert('success');
+						},
+						complete: function(XMLHttpRequest, textStatus){
+							//HideLoading();
+						},
+						error: function(){
+							//请求出错处理
+						}
+					});
+				});
+
   				$("p").click(function(){
   					$(this).hide();
   				});
 			});
 		</script>
+		<style type="text/css">
+			.input_msg {
+				width: 500px;
+				height: 80px;
+			}
+			.submit_msg {
+				width: 80px;
+				height: 30px;
+				background-color: #4682B4;
+				border: 0px;
+				color: #fff;
+			}
+		</style>
 	</head>
 	<body>
+		<textarea type="text" name="input_msg" class="input_msg">Leave Your Message Here to Tongkai</textarea>
+		<br/>
+		<input type="button" name="submit_msg" class="submit_msg" value="SUBMIT"/>
 		<p>If you click on me, I will disappear.</p>
 	</body>
 </html>
