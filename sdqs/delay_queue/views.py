@@ -1,7 +1,17 @@
 # Create your views here.
 from django.http import HttpResponse
+from django.shortcuts import render_to_response
+import datetime
 import webob.exc
 import operate_queue
+from log.init_logger import DQ_LOGGER
+
+logger = DQ_LOGGER
+
+
+def index(request):
+    now = datetime.datetime.now()
+    return render_to_response('index.html', {"current_date": now})
 
 
 def generate_queue_name(input_str):
@@ -36,6 +46,8 @@ def put_message(request):
     user = params.get('user')
     message = params.get('message')
     label = params.get('label')
+
+    logger.debug('user %s, message %s, label %s' % (user, message, label))
 
     if user == None or message == None or label == None:
         raise webob.exc.HTTPBadRequest('Parameters is invalid')

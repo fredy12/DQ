@@ -11,6 +11,7 @@ from delay_queue.views import *
 #    return HttpResponse('hello world')
 
 urlpatterns = patterns('',
+    ('^$', index),
     ('^message$', handle_message),
     #('^get_message/$', get_message),
     # Examples:
