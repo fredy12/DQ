@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<title>Get Message</title>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+
+				$(".submit_msg").click(function(){
+					$.ajax({
+						type: "get",
+						url: "/message?user=para",
+						//dataType: "json",
+						//data: {user: "para", message: "hello world", label: "common"},
+						success: function(data){
+							$(".show_msg").append(data+"<br/>");
+						}
+					});
+				});
+			});
+		</script>
+		<style type="text/css">
+			.get_msg {
+				width: 80px;
+				height: 30px;
+				background-color: #4682B4;
+				border: 0px;
+				color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<input type="button" name="get_msg" class="get_msg" value="Get Message"/>
+		<p class="show_msg"></p>
+	</body>
+</html>
