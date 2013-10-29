@@ -1,21 +1,23 @@
 <html>
 	<head>
 		<title>Leave A Message</title>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$(".input_msg").click(function(){
 					$(this).text('');
 				}).blur(function(){
-					$(this).text('Leave Your Message Here to Tongkai');
+					$(this).text('给我留言');
 				});
 
 				$(".submit_msg").click(function(){
+					var msg_content = $(".input_msg").val();
+					var delay_time = $(".delay_time").val();
 					$.ajax({
 						type: "post",
 						url: "/message",
 						//dataType: "json",
-						data: {user: "para", message: "hello world", label: "common"},
+						data: {user: "para", message: msg_content, label: "common", delay: delay_time},
 						success: function(data){
 							alert("success");
 						}
@@ -28,9 +30,25 @@
 			});
 		</script>
 		<style type="text/css">
-			.input_msg {
-				width: 500px;
+			body {
+				margin:0;
+				padding:0;
+				background: #E6E6E6 url(image/body.png) repeat-x;
+				font-family: Microsoft Yahei, Arial;
+			}
+			.header {
 				height: 80px;
+				color: #ddd;
+				text-align: center;
+				padding-top: 0.1px;
+			}
+			.content {
+				text-align: center;
+				padding-top: 50px;
+			}
+			.input_msg {
+				/*width: 500px;
+				height: 80px;*/
 			}
 			.submit_msg {
 				width: 80px;
@@ -39,12 +57,21 @@
 				border: 0px;
 				color: #fff;
 			}
+			.submit_msg:hover{
+				cursor:pointer;
+			}
 		</style>
 	</head>
 	<body>
-		<textarea type="text" name="input_msg" class="input_msg">Leave Your Message Here to Tongkai</textarea>
-		<br/>
-		<input type="button" name="submit_msg" class="submit_msg" value="SUBMIT"/>
-		<p>If you click on me, I will disappear.</p>
+		<div class="header">
+			<h1>给我留言 - 子誉</h1>
+		</div>
+		<div class="content">
+			<textarea type="text" name="input_msg" class="input_msg" rows="15" cols="80">给我留言</textarea>
+			<br/>
+			<br/>
+			延迟(秒): <input type="text" name="delay_time" class="delay_time" value="0"/>
+			<input type="button" name="submit_msg" class="submit_msg" value="提交"/>
+		</div>
 	</body>
 </html>

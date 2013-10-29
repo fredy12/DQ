@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
 import beanstalkc
 
 def connect(bean_host='localhost', bean_port=11300):
@@ -38,7 +41,7 @@ def get_message_consume(queue_name):
     message = None
     if msg_obj:
         message = msg_obj.body
-    msg_obj.delete()
+        msg_obj.delete()
     return message
 
 

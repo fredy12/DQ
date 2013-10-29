@@ -1,0 +1,103 @@
+<html>
+	<head>
+		<title>Get Message</title>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jquery.cookie.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var cookie_val = $.cookie('read_msg');
+				if (cookie_val == null || cookie_val == '') {
+					cookie_val = [];
+				} else {
+					cookie_val = cookie_val.split(',');
+				}
+				for (var i in cookie_val) {
+                                	$(".show_msg").append(get_msg_html_elements(cookie_val[i]));
+				}
+
+				$("#get_msg").click(function(){
+					$.ajax({
+						type: "get",
+						url: "/message?user=para",
+						//dataType: "json",
+						//data: {user: "para", message: "hello world", label: "common"},
+						success: function(data){
+                                                        if (data != '') {
+								$(".show_msg").append(get_msg_html_elements(data));
+                                                        	cookie_val.push(data);
+								$.cookie("read_msg", cookie_val.toString());
+							}
+						}
+					});
+				});
+
+                                // reput message to queue
+                                $("#reput_msg").click(function(){
+                                        var delay_time = $("#delay_time").val();
+                                        $(".msg_ckb:checked").each(function(){
+                                        	$.ajax({
+                                                	type: "post",
+                                                	url: "/message",
+                                                	//dataType: "json",
+                                                	data: {user: "para", message: $(this).val(), label: "common", delay: delay_time},
+                                                	success: function(data){
+                                                        	alert("success");
+                                                	}
+                                                });
+                                                $(this).parent('.msg_div').remove();
+                                        });
+                                });
+
+				// finish read msg, delete it
+				$(document).delegate(".msg_img", 'click', function(){
+					var prev_element = $(this).prev();
+					if (prev_element.css('text-decoration') != 'line-through') {
+						prev_element.css('text-decoration', 'line-through');
+						//remove msg from cookie
+						var a_read_msg = $(this).prev().text();
+						cookie_val = $.cookie('read_msg');
+						if (cookie_val != null) {
+							cookie_val = cookie_val.split(',');
+							for (var i in cookie_val) {
+								if (cookie_val[i] == a_read_msg) {
+									cookie_val.splice(i, 1);
+									$.cookie('read_msg', cookie_val.toString());
+									break;
+								}
+							}
+						}
+					}
+				});
+
+				// get cookie
+                                $("#show_cookie").click(function(){
+					alert($.cookie("read_msg"));
+				});
+
+				// below are help functions
+				function get_msg_html_elements(msg_data) {
+					return "<div class='msg_div'><input type='checkbox' class='msg_ckb' value='"+msg_data+"'/><span class='msg_span'>"+msg_data+"</span><img class='msg_img' width='16' height='16' src='image/choose.png' alt='Finish'></div>"
+				}
+			});
+		</script>
+		<style type="text/css">
+			.btn_style1 {
+				width: 100px;
+				height: 30px;
+				background-color: #4682B4;
+				border: 0px;
+				color: #fff;
+			}
+			.btn_style1:hover, .msg_img:hover {
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<input type="button" id="get_msg" class="btn_style1" value="获取消息"/>
+		<p class="show_msg"></p>
+                延迟(秒): <input type="text" id="delay_time" class="delay_time" value="0"/>
+                <input type="button" id="reput_msg" class="btn_style1" value="放回消息"/>
+                <input type="button" id="show_cookie" class="btn_style1" value="获取cookie"/>
+	</body>
+</html>

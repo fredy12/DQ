@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
 # Create your views here.
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
@@ -11,8 +14,12 @@ logger = DQ_LOGGER
 
 def index(request):
     now = datetime.datetime.now()
-    return render_to_response('index.html', {"current_date": now})
+    return render_to_response('index.html', {'current_date': now})
 
+
+def show_message(request):
+    now = datetime.datetime.now()
+    return render_to_response('show_message.html', {'current_date': now})
 
 def generate_queue_name(input_str):
     return 'q_' + input_str
@@ -40,20 +47,21 @@ def get_message(request):
 
 def put_message(request):
     params = dict(request.REQUEST)
-    if len(params) > 3:
+    if len(params) > 4:
         raise webob.exc.HTTPBadRequest('Too more parameters')
 
-    user = params.get('user')
-    message = params.get('message')
-    label = params.get('label')
+    user = params.get('user').encode('utf8')
+    message = params.get('message').encode('utf8')
+    label = params.get('label').encode('utf8')
+    delay = params.get('delay').encode('utf8')
 
-    logger.debug('user %s, message %s, label %s' % (user, message, label))
+    logger.debug('user %s, message %s, label %s, delay %s' % (user, message, label, delay))
 
-    if user == None or message == None or label == None:
+    if user == None or message == None or label == None or delay == None:
         raise webob.exc.HTTPBadRequest('Parameters is invalid')
 
     queue_name = generate_queue_name(user)
-    result = operate_queue.put_message(queue_name, message)
+    result = operate_queue.put_message(queue_name, message, delay=long(delay))
     if result:
         return HttpResponse()
     else:
